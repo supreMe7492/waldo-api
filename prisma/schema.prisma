@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Image {
+  id         Int           @id @default(autoincrement())
+  path       String        @unique
+  characters Character[]
+  sessions   Gamesession[]
+}
+
+model Character {
+  id     Int       @id @default(autoincrement())
+  name   String
+  cordsx Float
+  cordsy Float
+  img    Image     @relation(fields: [imgId], references: [id])
+  imgId  Int
+  found  Chfound[]
+
+  @@unique([imgId, name])
+}
+
+model Gamesession {
+  id         String    @id @default(ulid())
+  started_at DateTime  @default(now())
+  ended_at   DateTime?
+  img        Image     @relation(fields: [imgId], references: [id])
+  imgId      Int
+  found      Chfound[]
+  score      Score?
+}
+
+model Chfound {
+  id   Int         @id @default(autoincrement())
+  ch   Character   @relation(fields: [chId], references: [id])
+  game Gamesession @relation(fields: [gmId], references: [id])
+  chId Int
+  gmId String
+
+  @@unique([chId, gmId])
+}
+
+model Score {
+  id        Int         @id @default(autoincrement())
+  name      String
+  timescore Int
+  game      Gamesession @relation(fields: [gmId], references: [id])
+  gmId      String      @unique
+}
