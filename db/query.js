@@ -1,11 +1,11 @@
 const { prisma } = require("../lib/prisma");
 
-async function selectImg(id) {
+async function selectImgPath(id) {
   return prisma.image.findFirst({
     where: {
-      id,
+      id: parseInt(id),
     },
   });
 }
 
-module.exports = { selectImg };
+module.exports = { selectImgPath };
