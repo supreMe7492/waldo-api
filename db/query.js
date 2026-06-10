@@ -8,4 +8,12 @@ async function selectImgPath(id) {
   });
 }
 
-module.exports = { selectImgPath };
+async function selectImgCharacters(imgId) {
+  return prisma.character.findMany({
+    where: {
+      imgId: parseInt(imgId),
+    },
+  });
+}
+
+module.exports = { selectImgPath, selectImgCharacters };

@@ -11,6 +11,9 @@ app.get("/", () => {
 const img = require("./routes/img");
 app.use("/img", img);
 
+const ch = require("./routes/chr");
+app.use("/characters", ch);
+
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status).json({
