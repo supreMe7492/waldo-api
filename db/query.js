@@ -16,4 +16,14 @@ async function selectImgCharacters(imgId) {
   });
 }
 
-module.exports = { selectImgPath, selectImgCharacters };
+async function insertGame(imgId) {
+  const gameSess = await prisma.gamesession.create({
+    data: {
+      imgId: parseInt(imgId),
+    },
+  });
+
+  return gameSess;
+}
+
+module.exports = { selectImgPath, selectImgCharacters, insertGame };
