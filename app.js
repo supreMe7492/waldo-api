@@ -14,6 +14,9 @@ app.use("/img", img);
 const ch = require("./routes/chr");
 app.use("/characters", ch);
 
+const game = require("./routes/game");
+app.use("/game", game);
+
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status).json({
