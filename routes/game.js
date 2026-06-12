@@ -1,7 +1,7 @@
 const { Router } = require("express");
-const { startGame } = require("../controllers/gamecontroller");
-const gameSession = Router();
+const { startGame, checkFound } = require("../controllers/gamecontroller");
+const game = Router();
 
-gameSession.post("/:imgId", startGame);
-
-module.exports = gameSession;
+game.post("/start/:imgId", startGame);
+game.post("/guess", checkFound);
+module.exports = game;

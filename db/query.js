@@ -26,4 +26,27 @@ async function insertGame(imgId) {
   return gameSess;
 }
 
-module.exports = { selectImgPath, selectImgCharacters, insertGame };
+async function insertFound(chId, gmId) {
+  return prisma.chfound.create({
+    data: {
+      chId: parseInt(chId),
+      gmId: gmId,
+    },
+  });
+}
+
+async function selectCharacter(id) {
+  return prisma.character.findFirst({
+    where: {
+      id: parseInt(id),
+    },
+  });
+}
+
+module.exports = {
+  selectImgPath,
+  selectImgCharacters,
+  insertGame,
+  insertFound,
+  selectCharacter,
+};
