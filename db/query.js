@@ -43,10 +43,29 @@ async function selectCharacter(id) {
   });
 }
 
+async function selectfoundCharacter(chId, gmId) {
+  return prisma.chfound.findFirst({
+    where: {
+      gmId,
+      chId: parseInt(chId),
+    },
+  });
+}
+
+async function selectGameImg(gmId) {
+  return prisma.gamesession.findFirst({
+    where: {
+      id: gmId,
+    },
+  });
+}
+
 module.exports = {
   selectImgPath,
   selectImgCharacters,
   insertGame,
   insertFound,
   selectCharacter,
+  selectfoundCharacter,
+  selectGameImg,
 };
