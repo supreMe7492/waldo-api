@@ -78,6 +78,7 @@ async function insertEndTime(gmId) {
     },
   });
 }
+
 module.exports = {
   selectImgPath,
   selectImgCharacters,

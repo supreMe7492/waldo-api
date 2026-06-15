@@ -54,16 +54,19 @@ async function checkFound(req, res, next) {
       message: "not the character",
     });
   }
-  const allFound = await selecAllFound(gameId);
-  console.log(allFound);
+
   const isFound = await selectfoundCharacter(chId, gameId);
+
   if (isFound) {
     return res.status(409).json({
       success: false,
       message: "already found",
     });
   }
-  if (allFound.length == 2) {
+  await insertFound(chId, gameId);
+  const allFound = await selecAllFound(gameId);
+
+  if (allFound.length == 3) {
     await insertEndTime(gameId);
     return res.json({
       success: true,
@@ -71,7 +74,6 @@ async function checkFound(req, res, next) {
       message: "completed game sucessfully",
     });
   }
-  await insertFound(chId, gameId);
   res.json({
     success: true,
     found: true,
