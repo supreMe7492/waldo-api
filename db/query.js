@@ -60,6 +60,24 @@ async function selectGameImg(gmId) {
   });
 }
 
+async function selecAllFound(gmId) {
+  return prisma.chfound.findMany({
+    where: {
+      gmId,
+    },
+  });
+}
+
+async function insertEndTime(gmId) {
+  return prisma.gamesession.update({
+    where: {
+      id: gmId,
+    },
+    data: {
+      ended_at: new Date(),
+    },
+  });
+}
 module.exports = {
   selectImgPath,
   selectImgCharacters,
@@ -68,4 +86,6 @@ module.exports = {
   selectCharacter,
   selectfoundCharacter,
   selectGameImg,
+  selecAllFound,
+  insertEndTime,
 };

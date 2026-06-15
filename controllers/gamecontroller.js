@@ -4,6 +4,8 @@ const {
   selectCharacter,
   selectfoundCharacter,
   selectGameImg,
+  selecAllFound,
+  insertEndTime,
 } = require("../db/query");
 const ch = require("../routes/chr");
 
@@ -36,18 +38,14 @@ async function checkFound(req, res, next) {
   const clicky = parseFloat(req.body.cordsy);
   const distance = calculateDistance(cordsx, cordsy, clickx, clicky);
   const gameDet = await selectGameImg(gameId);
-  console.log(characterDet);
   const radius = 0.03;
 
-  // Guard clause: wrong image
   if (gameDet.imgId !== characterDet.imgId) {
     return res.status(400).json({
       success: false,
       message: "character not in this image",
     });
   }
-
-  // Guard clause: too far away
   if (distance > radius) {
     return res.json({
       success: true,
@@ -55,8 +53,8 @@ async function checkFound(req, res, next) {
       message: "not the character",
     });
   }
-
-  // Main logic: check if already found
+  const allFound = await selecAllFound(gameId);
+  console.log(allFound);
   const isFound = await selectfoundCharacter(chId, gameId);
   if (isFound) {
     return res.status(409).json({
@@ -64,8 +62,14 @@ async function checkFound(req, res, next) {
       message: "already found",
     });
   }
-
-  // Success path
+  if (allFound.length == 2) {
+    await insertEndTime(gameId);
+    return res.json({
+      success: true,
+      found: true,
+      message: "completed game sucessfully",
+    });
+  }
   await insertFound(chId, gameId);
   res.json({
     success: true,
