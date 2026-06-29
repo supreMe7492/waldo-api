@@ -6,6 +6,7 @@ const {
   selectGameImg,
   selecAllFound,
   insertEndTime,
+  insertScore,
 } = require("../db/query");
 const ch = require("../routes/chr");
 
@@ -81,4 +82,51 @@ async function checkFound(req, res, next) {
   });
 }
 
-module.exports = { startGame, checkFound };
+async function completeGame(req, res, next) {
+  try {
+    const gameId = req.cookies.gameId;
+    const { playerName } = req.body;
+
+    if (!playerName) {
+      return res.status(400).json({
+        success: false,
+        message: "Player name is required",
+      });
+    }
+
+    const gameDet = await selectGameImg(gameId);
+
+    if (!gameDet) {
+      return res.status(404).json({
+        success: false,
+        message: "Game session not found",
+      });
+    }
+
+    if (!gameDet.ended_at) {
+      return res.status(400).json({
+        success: false,
+        message: "Game has not been completed yet",
+      });
+    }
+
+    // Calculate time taken in milliseconds
+    const timeScore = gameDet.ended_at.getTime() - gameDet.started_at.getTime();
+
+    const score = await insertScore(gameId, playerName, timeScore);
+
+    res.json({
+      success: true,
+      message: "Score saved successfully",
+      data: {
+        gameId: score.gmId,
+        playerName: score.name,
+        timeScore: score.timescore,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { startGame, checkFound, completeGame };
