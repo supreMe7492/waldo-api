@@ -79,6 +79,66 @@ async function insertEndTime(gmId) {
   });
 }
 
+async function insertScore(gmId, playerName, timeScore) {
+  return prisma.score.create({
+    data: {
+      gmId: gmId,
+      name: playerName,
+      timescore: parseInt(timeScore),
+    },
+  });
+}
+
+async function getLeaderboardByImage(imgId, limit = 10) {
+  return prisma.score.findMany({
+    where: {
+      game: {
+        imgId: parseInt(imgId),
+      },
+    },
+    orderBy: {
+      timescore: "asc",
+    },
+    take: limit,
+    include: {
+      game: {
+        select: {
+          id: true,
+          started_at: true,
+        },
+      },
+    },
+  });
+}
+
+async function getPlayerRankByImage(gmId, imgId) {
+  const score = await prisma.score.findFirst({
+    where: {
+      gmId: gmId,
+    },
+  });
+
+  if (!score) {
+    return null;
+  }
+
+  const rank = await prisma.score.count({
+    where: {
+      game: {
+        imgId: parseInt(imgId),
+      },
+      timescore: {
+        lt: score.timescore,
+      },
+    },
+  });
+
+  return {
+    ...score,
+    rank: rank + 1,
+  };
+}
+
 module.exports = {
   selectImgPath,
   selectImgCharacters,
@@ -89,4 +149,7 @@ module.exports = {
   selectGameImg,
   selecAllFound,
   insertEndTime,
+  insertScore,
+  getLeaderboardByImage,
+  getPlayerRankByImage,
 };
