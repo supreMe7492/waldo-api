@@ -21,6 +21,9 @@ app.use("/characters", ch);
 const game = require("./routes/game");
 app.use("/game", game);
 
+const leaderboard = require("./routes/leaderboard");
+app.use("/leaderboard", leaderboard);
+
 app.use((err, req, res, next) => {
   const status = err.status || 500;
   res.status(status).json({
