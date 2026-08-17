@@ -8,6 +8,10 @@ async function selectImgPath(id) {
   });
 }
 
+async function selectImgs() {
+  return prisma.image.findMany({});
+}
+
 async function selectImgCharacters(imgId) {
   return prisma.character.findMany({
     where: {
@@ -152,4 +156,5 @@ module.exports = {
   insertScore,
   getLeaderboardByImage,
   getPlayerRankByImage,
+  selectImgs,
 };
