@@ -7,6 +7,7 @@ const {
   selecAllFound,
   insertEndTime,
   insertScore,
+  selectImgCharacters,
 } = require("../db/query");
 const ch = require("../routes/chr");
 
@@ -66,7 +67,11 @@ async function checkFound(req, res, next) {
   }
   await insertFound(chId, gameId);
   const allFound = await selecAllFound(gameId);
-
+  const allChIdDet = await selectImgCharacters(gameDet.imgId);
+  const allChId = allChIdDet.map((ch) => ch.id);
+  const allFoundId = allFound.map((ch) => ch.chId);
+  console.log(allFoundId);
+  const notFoundId = allChId.filter((chId) => !allFoundId.includes(chId));
   if (allFound.length == 3) {
     await insertEndTime(gameId);
     return res.json({
@@ -78,6 +83,7 @@ async function checkFound(req, res, next) {
   res.json({
     success: true,
     found: true,
+    notFoundIds: notFoundId,
     message: "found the character",
   });
 }
