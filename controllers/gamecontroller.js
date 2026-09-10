@@ -77,12 +77,14 @@ async function checkFound(req, res, next) {
     return res.json({
       success: true,
       found: true,
+      completed: true,
       message: "completed game sucessfully",
     });
   }
   res.json({
     success: true,
     found: true,
+    completed: false,
     notFoundIds: notFoundId,
     message: "found the character",
   });
