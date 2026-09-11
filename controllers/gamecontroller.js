@@ -8,7 +8,6 @@ const {
   insertEndTime,
   insertScore,
   selectImgCharacters,
-  selectImgCharacters,
 } = require("../db/query");
 const ch = require("../routes/chr");
 
