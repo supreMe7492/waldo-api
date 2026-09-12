@@ -16,6 +16,8 @@ async function startGame(req, res, next) {
     const gameSess = await insertGame(req.params.imgId);
     res.cookie("gameId", gameSess.id, {
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
       maxAge: 60 * 60 * 1000,
     });
     res.json({ success: true, message: "Game started" });
