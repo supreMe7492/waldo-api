@@ -41,7 +41,7 @@ async function checkFound(req, res, next) {
   const clicky = parseFloat(req.body.cordsy);
   const distance = calculateDistance(cordsx, cordsy, clickx, clicky);
   const gameDet = await selectGameImg(gameId);
-  const radius = 0.03;
+  const radius = 0.035;
 
   if (gameDet.imgId !== characterDet.imgId) {
     return res.status(400).json({
